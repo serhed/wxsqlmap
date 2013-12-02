@@ -1,0 +1,117 @@
+.treeDump {
+    width: 100%;
+}
+
+div.tree{
+    position: relative;
+}
+
+div.tree > details > summary{
+    background-color: rgba(0, 0, 255, 0.25);
+}
+
+div.tree > details > ul > li > details > summary{
+    background-color: rgba(0, 0, 255, 0.15);
+}
+
+div.tree > details > ul > li > details > ul{
+    background-color: rgba(0, 0, 255, 0.1);
+}
+
+div.dump > details >  summary{
+    background-color: rgba(0, 255, 0, 0.25);
+}
+
+div.dump > details > ul > li > details > summary {
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+div.results > details > summary{
+    background-color: rgba(255, 255, 0, 0.25);
+}
+
+div.results > details > div{
+    background-color: rgba(255, 255, 0, 0.15);
+}
+
+div.results > details > div > ul > li{
+    list-style: decimal;
+}
+
+div.tab {
+    position: relative;
+    width: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+div.tab > div {
+    display: inline-block;
+    padding: .2em;
+    font-size: 14px;
+    border-radius: 3px 3px 0 0;
+    background-color: #6f8cb5;
+    line-height: 1em;
+}
+
+div.tab > div + div {
+    margin-left: .2em;
+}
+
+div.tab > div > a{
+    color:white;
+    text-decoration: none;
+}
+
+div.tab > div:target {
+    color: black;
+    background-color: #ebeefa;
+}
+
+div.tab > div:target > a{
+    color: black;
+}
+
+div.tab > div > div {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: .2em;
+    border-radius: 0 3px 3px 3px;
+    display: none;
+    color: black;
+    background-color: #ebeefa;
+    width: 100%;
+}
+
+div.tab > div:target > div {
+    display: block;
+}
+
+div.results{
+
+}
+
+textarea{
+    width: 100%;
+    height: 100px;
+}
+
+table{
+    width: auto;
+}
+
+td{
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 255, 0.3);
+}
+
+th{
+    background-color: rgba(0, 0, 255, 0.15);
+    padding-left: 2px;
+    word-break: keep-all;
+}
+
+li {
+    list-style: none;
+}

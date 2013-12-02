@@ -1,0 +1,14 @@
+{
+    "server": {
+        "host": "127.0.0.1",
+        "port": 8775,
+        "headers": {"content-type": "application/json"}
+    },
+    "option": {
+        "proxy": null,
+        "ignoreProxy": false,
+        "tor": false,
+        "torType": "HTTP",
+        "torPort": 0
+    }
+}

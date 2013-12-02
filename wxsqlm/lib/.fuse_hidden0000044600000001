@@ -1,0 +1,123 @@
+__author__ = 'Mehmet'
+
+import threading
+import wx
+from wxsqlm.lib.interface import SqlMapInterface
+
+
+class ScanThread(threading.Thread):
+
+    def __init__(self, window):
+        threading.Thread.__init__(self)
+        self.window = window
+        self.threadEvent = threading.Event()
+        self.threadEvent.clear()
+        self.logNew = []
+        self.logOld = []
+        self.logDiff = []
+        self.interface = SqlMapInterface()
+
+    def isTerminated(self):
+        return self.interface.scan_status()['status'] == 'terminated'
+
+    def stop(self):
+        self.interface.scan_stop()
+        self.threadEvent.set()
+
+    def logging(self):
+        self.logOld, self.logNew = self.logNew, self.interface.scan_log()['log']
+        self.lenNew, self.lenOld = len(self.logNew), len(self.logOld)
+
+        if self.lenNew - self.lenOld > 0:
+            self.logDiff = self.logNew[self.lenOld:]
+
+            for log in self.logDiff:
+                text = '[%s] [%s] %s\n %s\n\n' % (log['time'], log['level'], self.lenNew, log['message'])
+                wx.CallAfter(self.window.add_new_log, text)
+
+    def run(self):
+        self.interface.task_new()
+        self.interface.scan_start()
+
+        while not self.threadEvent.isSet():
+            self.logging()
+
+            if self.isTerminated():
+                break
+
+            self.threadEvent.wait(1.0)
+
+        if self.interface.scan_status()['returncode'] == 0:
+            wx.CallAfter(self.window.SetStatusText, 'Scan finished')
+            col = 'ID,user_login,user_email,user_status'.split(',')
+
+            data = []
+            scanData = self.interface.scan_data()['data']
+
+            if scanData:
+                scanData = scanData[-1]['value']
+
+                for c in col:
+                    data.append(scanData[c]['values'])
+
+                data = zip(*data)
+                wx.CallAfter(self.window.add_grid, data, col)
+
+
+            wx.CallAfter(self.window.enable_new_scan, True)
+        else:
+            self.interface.task_delete()
+
+
+        # for k in datas.keys():
+        #     try:
+        #         col.append(k)
+        #         data.append(datas[k]['values'])
+        #         #print datas[k]
+        #
+        #     except KeyError:
+        #         pass
+
+
+        #print col
+
+        # print data
+        #
+        # data = zip(*data)
+        # print data
+
+
+        # datas = self.iFace.scan_data()#['data'][-1]['value']
+        #
+        # print datas['user_login']['values'][0], datas['user_pass']['values'][0]
+
+
+
+        # for db in datas.keys():
+        #     wx.CallAfter(self.window.appendTreeItem, db, 'db')
+        #     for tab in datas[db].keys():
+        #         wx.CallAfter(self.window.appendTreeItem, tab, 'tab')
+        #         for col in datas[db][tab].keys():
+        #             wx.CallAfter(self.window.appendTreeItem, col+', '+datas[db][tab][col], 'col')
+
+
+
+    #     if type(datas) is list:
+    #         self.handleList(datas)
+    #
+    #     elif type(datas) is dict:
+    #         self.handleDict(datas)
+    #     else:
+    #         print '< <  unknown type  > >'
+    #
+    # def handleList(self, datas):
+    #     for db in datas:
+    #         wx.CallAfter(self.window.appendTreeItem, db, 'db')
+    #
+    # def handleDict(self, datas):
+    #     for db in datas.keys():
+    #         wx.CallAfter(self.window.appendTreeItem, db, 'db')
+    #         for tab in datas[db].keys():
+    #             wx.CallAfter(self.window.appendTreeItem, tab, 'tab')
+    #             for col in datas[db][tab].keys():
+    #                 wx.CallAfter(self.window.appendTreeItem, col+', '+datas[db][tab][col], 'col')
