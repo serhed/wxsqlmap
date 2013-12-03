@@ -1,1 +1,3 @@
-__author__ = 'serhed'
+# -*- coding: utf-8 -*-
+
+__author__ = 'Mehmet Öztürk'
